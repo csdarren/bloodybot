@@ -18,9 +18,6 @@ class BloodyBot(commands.Bot):
 
 
 # @WaffleBot.command()
-# async def hello(ctx):
-#     await ctx.send("Hello!")
-# @WaffleBot.command()
 # async def weather(ctx):
 # 	await ctx.send(build_weather_report())
 #
