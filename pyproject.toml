@@ -1,0 +1,39 @@
+[project]
+name = "pybot"
+version = "0.1.0"
+requires-python = ">=3.13"
+description = "Bloodybot"
+dependencies = ["asyncio>=3.4.3", "discord>=2.3.2", "dotenv>=0.9.9"]
+
+[tool.uv]
+required-version = "==0.7.3"
+
+[tool.ruff]
+line-length = 125
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "ANN204", # flake8-annotations(missing-return-type-special-method): general disagree
+  "ANN401", # flake8-annotations(any-type): general disagree
+  "COM812", # flake8-commas(missing-trailing-comma): formatter conflicts
+  "D",      # pydocstyle: not doc'ing
+  "FBT",    # flake8-boolean-trap: general disagree
+  "INP",    # flake8-no-pep420: general disagree
+  "NPY",    # NumPy-specific rules: not numpy
+  "PD",     # pandas-vet: not pandas
+  "TD",     # flake8-todos: annoying
+  "TID252", # flake8-tidy-imports(relative-imports): general disagree
+]
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
+
+[tool.ruff.lint.per-file-ignores]
+"test/**/test_*.py" = [
+  "ANN201", # flake8-annotations(missing-return-type-undocumented-public-function): not helpful
+  "S101",   # flake8-bandit(assert): not helpful
+]
+"__init__.py" = [
+  "F403", # Pyflakes(undefined-local-with-import-star): star imports personal pref in init files
+]
