@@ -9,7 +9,6 @@ class CreateChannelCog(commands.Cog):
     def __init__(self, bot: BloodyBot):
         self.bot = bot
 
-    #@commands.Cog.listener()
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState) -> None:
         for guild in self.bot.guilds:
@@ -18,15 +17,15 @@ class CreateChannelCog(commands.Cog):
             if after.channel and not before.channel and after.channel.name == "Create Channel":
                 print(f"{member.display_name} joined the target channel {after.channel.name}")
                 if target_category:
-                    created_channel = await guild.create_voice_channel(name=f"{member.name} smelt it", category=target_category)
+                    created_channel = await guild.create_voice_channel(name=f"{member.display_name} smelt it", category=target_category)
                     await member.move_to(created_channel)
 
             if before.channel and not after.channel:
-                print(f"{member.name} left the target channel {before.channel.name}")
+                print(f"{member.display_name} left the target channel {before.channel.name}")
 
             for channel in guild.channels:
                 if not isinstance(channel, CategoryChannel):
-                    if channel.name != "Create Channel" and len(channel.members) == 0:
+                    if channel.name != "Create Channel" and not channel.members:
                         if isinstance(channel, VoiceChannel):
                             await channel.delete()
 

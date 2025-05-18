@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 
@@ -7,14 +8,14 @@ class BloodyBot(commands.Bot):
         super().__init__(
             command_prefix="!",
             intents=discord.Intents.all(),
+            tree_cls = app_commands.CommandTree,
         )
     async def setup_hook(self) -> None:
-        try:
-            await self.load_extension("exts.create_channel")
-        except Exception as e:
-            print(f"Failed to load cog: {e}")
+        await self.load_extension("exts.create_channel")
+        await self.load_extension("exts.utils")
         print(f"Logged in as {self.user}")
         print(f"Cog loaded: {self.get_cog("CreateChannelCog")}")
+        print(f"Cog loaded: {self.get_cog("UtilitiesCog")}")
 
 
 # @WaffleBot.command()
