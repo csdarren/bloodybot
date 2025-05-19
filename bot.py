@@ -1,14 +1,16 @@
+import logging
+
 import discord
-from discord import app_commands
 from discord.ext import commands
 
+logging.basicConfig(level=logging.DEBUG)
 
 class BloodyBot(commands.Bot):
     def __init__(self):
-        super().__init__(
+        super().__init__( # this super() function setups up commands.Bot, which was passed into the bot.
             command_prefix="!",
             intents=discord.Intents.all(),
-            tree_cls = app_commands.CommandTree,
+            tree_cls = discord.app_commands.CommandTree
         )
     async def setup_hook(self) -> None:
         await self.load_extension("exts.create_channel")

@@ -6,7 +6,7 @@ description = "Bloodybot"
 dependencies = ["asyncio>=3.4.3", "discord>=2.3.2", "dotenv>=0.9.9"]
 
 [tool.uv]
-required-version = "==0.7.3"
+required-version = "==0.7.5"
 
 [tool.ruff]
 line-length = 125
