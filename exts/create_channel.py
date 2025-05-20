@@ -10,7 +10,7 @@ from bot import BloodyBot
 class CreateChannelCog(commands.Cog):
     def __init__(self, bot: BloodyBot):
         self.bot = bot
-        self.created_channels_id: set[int] = set()
+        self.created_channels: set[VoiceChannel] = set()
         self.members_created_channels: set [Member] = set()
         self.update_channel_names.start()
 
@@ -18,8 +18,7 @@ class CreateChannelCog(commands.Cog):
     async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState) -> None:
         print(f"member: {member.display_name} joined {after.channel} from {before.channel}")
 
-        for channel_id in self.created_channels_id:
-            channel = self.bot.get_channel(channel_id)
+        for channel in self.created_channels:
             if isinstance(channel, VoiceChannel) and not channel.members:
                 await channel.delete()
 
@@ -28,8 +27,8 @@ class CreateChannelCog(commands.Cog):
             if target_category:
                 # Create channel in target_category.
                 created_channel = await target_category.create_voice_channel(f"{member.display_name} smelt it")
-                # Adds the created channels ID to a set of channel ids that is stored in self.created_channels_id
-                self.created_channels_id.add(created_channel.id)
+                # Adds the channel to a list that is stored in the bot class for later use in the tasks.
+                self.created_channels.add(created_channel)
                 self.members_created_channels.add(member)
                 print(f"Moving {member.name} to {created_channel.name}")
                 # Moves the member that caused the voice state update to the created channel
@@ -38,8 +37,7 @@ class CreateChannelCog(commands.Cog):
     @tasks.loop(minutes=10)
     async def update_channel_names(self) -> None:
         print("Loop started ----------------------------------------------------------------------------")
-        for channel_id in self.created_channels_id:
-            channel = self.bot.get_channel(channel_id)
+        for channel in self.created_channels:
             if isinstance(channel, VoiceChannel) and channel.name != "Create Channel":
                 creation_time = channel.created_at
                 current_time = datetime.now(tz=UTC)
