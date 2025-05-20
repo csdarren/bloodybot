@@ -43,8 +43,12 @@ class CreateChannelCog(commands.Cog):
                 time_passed = current_time - creation_time
                 hours_passed = int(time_passed.total_seconds() / 3600)
                 if not hours_passed > 1:
-                    await channel.edit(name=f"{member.display_name} smelt it {hours_passed} hours ago")
-                await channel.edit(name=f"{member.display_name} smelt it recently")
+                    channel_edit_str = f"{member.display_name} smelt it {hours_passed} hours ago"
+                    if channel.name != channel_edit_str:
+                        await channel.edit(name=channel_edit_str)
+                channel_edit_str = f"{member.display_name} smelt it recently"
+                if channel.name != channel_edit_str:
+                    await channel.edit(name=channel_edit_str)
         print("Loop ended ------------------------------------------------------------------------------")
 
 
