@@ -35,7 +35,7 @@ class CreateChannelCog(commands.Cog):
                 # Moves the member that caused the voice state update to the created channel
                 await member.move_to(created_channel)
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=10)
     async def update_channel_names(self) -> None:
         print("Loop started ----------------------------------------------------------------------------")
         for channel_id in self.created_channels_id:
@@ -48,7 +48,6 @@ class CreateChannelCog(commands.Cog):
                     hours_passed = int(time_passed.total_seconds() / 3600)
                     await channel.edit(name=f"{member.display_name} smelt it {hours_passed} hours ago")
         print("Loop ended ------------------------------------------------------------------------------")
-
 
 
 async def setup(bot: BloodyBot) -> None:
