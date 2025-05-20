@@ -12,10 +12,10 @@ class UtilitiesCog(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def prune(self, ctx: commands.Context[BloodyBot]) -> None:
+    async def prune(self, ctx: commands.Context[BloodyBot], amt: int) -> None:
         channel = ctx.channel
         if isinstance(channel, TextChannel):
-            await channel.purge(limit=1)
+            await channel.purge(limit=amt)
 
     @commands.command()
     async def get_channel_creation(self, ctx: commands.Context[BloodyBot], channel_id: int) -> None:
