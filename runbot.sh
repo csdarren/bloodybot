@@ -1,1 +1,1 @@
-sudo docker run --rm -v /home/dhall/services/bloodybot:/bot/bloodybot --name "bloodybot" -d -t bloodybot:1
+sudo docker run --rm -v /home/dhall/services/bloodybot:/bot --name "bloodybot" -d -t bloodybot:1

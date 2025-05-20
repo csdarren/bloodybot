@@ -20,6 +20,4 @@ WORKDIR /bot
 COPY --from=build-stage /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY . /bot
-
 CMD ["python", "/bot/main.py"]
