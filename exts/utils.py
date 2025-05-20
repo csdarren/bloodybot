@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 
+from discord import TextChannel
 from discord.ext import commands
 
 from bot import BloodyBot
@@ -11,18 +12,10 @@ class UtilitiesCog(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def sync(self, ctx: commands.Context[BloodyBot]) -> None:
-        await self.bot.tree.sync()
-        await ctx.message.add_reaction(GREEN_CHECKMARK)
-
-    @commands.command()
-    async def cleartree(self, ctx: commands.Context[BloodyBot]) -> None:
-        g = ctx.guild
-        if g is None:
-            return
-        self.bot.tree.clear_commands(guild=g)
-        await self.bot.tree.sync(guild=g)
-        await ctx.message.add_reaction(GREEN_CHECKMARK)
+    async def prune(self, ctx: commands.Context[BloodyBot]) -> None:
+        channel = ctx.channel
+        if isinstance(channel, TextChannel):
+            await channel.purge(limit=1)
 
     @commands.command()
     async def get_channel_creation(self, ctx: commands.Context[BloodyBot], channel_id: int) -> None:
@@ -39,13 +32,23 @@ class UtilitiesCog(commands.Cog):
         minutes_passed = int(time_passed.total_seconds() / 3600)
 
         await ctx.send(f"Channel {channel.name} was created at: {creation_time}")
-
         await ctx.send(f"Channel {channel.name} was created {minutes_passed} hours ago")
 
     @commands.command()
-    async def reload_extension(self, ctx: commands.Context[BloodyBot], ext: str) -> None:
+    async def reload_ext(self, ctx: commands.Context[BloodyBot], ext: str) -> None:
         await ctx.send(f"Reloading Extension: {ext}")
         await self.bot.reload_extension(ext)
+
+    @commands.command()
+    async def load_ext(self, ctx: commands.Context[BloodyBot], ext: str) -> None:
+        await ctx.send(f"Reloading Extension: {ext}")
+        await self.bot.load_extension(ext)
+
+    @commands.command()
+    async def unload_ext(self, ctx: commands.Context[BloodyBot], ext: str) -> None:
+        await ctx.send(f"Reloading Extension: {ext}")
+        await self.bot.unload_extension(ext)
+
 
 async def setup(bot: BloodyBot) -> None:
     await bot.tree.sync()

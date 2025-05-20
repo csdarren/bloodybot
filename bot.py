@@ -15,9 +15,11 @@ class BloodyBot(commands.Bot):
     async def setup_hook(self) -> None:
         await self.load_extension("exts.create_channel")
         await self.load_extension("exts.utils")
+        await self.load_extension("exts.sync")
         print(f"Logged in as {self.user}")
         print(f"Cog loaded: {self.get_cog("CreateChannelCog")}")
         print(f"Cog loaded: {self.get_cog("UtilitiesCog")}")
+        print(f"Cog loaded: {self.get_cog("SyncCog")}")
 
 
 # @WaffleBot.command()
