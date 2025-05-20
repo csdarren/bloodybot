@@ -39,14 +39,15 @@ class CreateChannelCog(commands.Cog):
     async def update_channel_names(self) -> None:
         print("Loop started ----------------------------------------------------------------------------")
         for channel_id in self.created_channels_id:
-            for member in self.members_created_channels:
-                channel = self.bot.get_channel(channel_id)
-                if isinstance(channel, VoiceChannel) and channel.name != "Create Channel":
-                    creation_time = channel.created_at
-                    current_time = datetime.now(tz=UTC)
-                    time_passed = current_time - creation_time
-                    hours_passed = int(time_passed.total_seconds() / 3600)
-                    await channel.edit(name=f"{member.display_name} smelt it {hours_passed} hours ago")
+            channel = self.bot.get_channel(channel_id)
+            if isinstance(channel, VoiceChannel) and channel.name != "Create Channel":
+                creation_time = channel.created_at
+                current_time = datetime.now(tz=UTC)
+                time_passed = current_time - creation_time
+                hours_passed = int(time_passed.total_seconds() / 3600)
+                for member in self.members_created_channels:
+                    if member.display_name in channel.name:
+                        await channel.edit(name=f"{member.display_name} smelt it {hours_passed} hours ago")
         print("Loop ended ------------------------------------------------------------------------------")
 
 
