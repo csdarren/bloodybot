@@ -19,6 +19,7 @@ class CreateChannelCog(commands.Cog):
 
         for channel, temp_member in self.created_channel_data:
             if isinstance(channel, VoiceChannel) and not channel.members:
+                self.created_channel_data.remove([channel, temp_member])
                 await channel.delete()
 
         if after.channel and after.channel.name == "Create Channel":
@@ -41,7 +42,9 @@ class CreateChannelCog(commands.Cog):
                 current_time = datetime.now(tz=UTC)
                 time_passed = current_time - creation_time
                 hours_passed = int(time_passed.total_seconds() / 3600)
-                await channel.edit(name=f"{member.display_name} smelt it {hours_passed} hours ago")
+                if not hours_passed > 1:
+                    await channel.edit(name=f"{member.display_name} smelt it {hours_passed} hours ago")
+                await channel.edit(name=f"{member.display_name} smelt it recently")
         print("Loop ended ------------------------------------------------------------------------------")
 
 
