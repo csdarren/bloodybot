@@ -19,10 +19,11 @@ class CreateChannelCog(commands.Cog):
 
 
         for channel, temp_member in self.created_channel_data:
-            if not isinstance(channel, VoiceChannel) and not channel.members:
+            if not isinstance(channel, VoiceChannel):
                 return
-            self.created_channel_data.remove([channel, temp_member])
-            await channel.delete()
+            if not channel.members:
+                self.created_channel_data.remove([channel, temp_member])
+                await channel.delete()
 
 
         if after.channel and after.channel.name == "Create Channel":
