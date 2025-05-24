@@ -31,7 +31,7 @@ class CreateChannelCog(commands.Cog):
             if not target_category:
                 return
             # Create channel in target_category.
-            created_channel = await target_category.create_voice_channel(f"{member.display_name} smelt it")
+            created_channel = await target_category.create_voice_channel(f"{member.display_name} smelt it recently")
             # Adds the channel to a list that is stored in the bot class for later use in the tasks.
             self.created_channel_data.append([created_channel, member])
             print(f"Moving {member.name} to {created_channel.name}")
@@ -39,7 +39,7 @@ class CreateChannelCog(commands.Cog):
             await member.move_to(created_channel)
 
 
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=30)
     async def update_channel_names(self) -> None:
         for channel, member in self.created_channel_data:
             if not isinstance(channel, VoiceChannel):
