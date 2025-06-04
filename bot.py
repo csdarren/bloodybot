@@ -16,10 +16,15 @@ class BloodyBot(commands.Bot):
         await self.load_extension("exts.create_channel")
         await self.load_extension("exts.utils")
         await self.load_extension("exts.sync")
+        await self.load_extension("exts.manageservers")
+        await self.load_extension("exts.manageservices")
+
         print(f"Logged in as {self.user}")
         print(f"Cog loaded: {self.get_cog("CreateChannelCog")}")
         print(f"Cog loaded: {self.get_cog("UtilitiesCog")}")
         print(f"Cog loaded: {self.get_cog("SyncCog")}")
+        print(f"Cog loaded: {self.get_cog("StartServers")}")
+        print(f"Cog loaded: {self.get_cog("SystemServices")}")
 
 
 # @WaffleBot.command()
