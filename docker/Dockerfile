@@ -13,7 +13,13 @@ RUN --mount=from=uv,source=/uv,target=/bin/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --no-dev --compile-bytecode --no-install-project --no-editable
 
+FROM docker:cli AS dockercli
+
+
 FROM python:3.13.3-slim
+
+
+COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
 
 WORKDIR /bot
 
