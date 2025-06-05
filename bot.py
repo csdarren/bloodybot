@@ -3,15 +3,19 @@ import logging
 import discord
 from discord.ext import commands
 
+from db.services import DbService
+
 logging.basicConfig(level=logging.DEBUG)
 
-class BloodyBot(commands.Bot):
-    def __init__(self):
+class BloodyBot(commands.Bot ):
+    def __init__(self, dbs: DbService):
         super().__init__( # this super() function setups up commands.Bot, which was passed into the bot.
             command_prefix="!",
             intents=discord.Intents.all(),
             tree_cls = discord.app_commands.CommandTree
         )
+        self.dbs = dbs
+
     async def setup_hook(self) -> None:
         await self.load_extension("exts.create_channel")
         await self.load_extension("exts.utils")

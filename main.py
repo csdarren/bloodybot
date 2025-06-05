@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from bot import BloodyBot
+from db.services import create_service
 
 load_dotenv()
 
@@ -11,7 +12,10 @@ TOKEN = os.environ["CORD_TOKEN"]
 
 async def run_bot() -> None:
     async with (
-        BloodyBot() as bot,
+        create_service() as dbs,
+        BloodyBot(
+            dbs=dbs
+        ) as bot,
     ):
         await bot.start(TOKEN)
 
