@@ -46,8 +46,8 @@ class DbService:
             await conn.execute(
                 querylist.CUSTOM_CHANNEL_ENTRY_START,
                 dto.channel, # channel ID of channel
-                dto.member, # member ID of the user that made channel
                 dto.guild, # guild ID that the voice channel was created in
+                dto.member, # member ID of the user that made channel
                 dto.create_time, # Time the channel was created
             )
 

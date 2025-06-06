@@ -81,11 +81,12 @@ class CreateChannelCog(commands.Cog):
             time_passed = current_time - creation_time
             hours_passed = int(time_passed.total_seconds() / 3600)
 
+            channel_guild = channel.guild
             channel_creator_id = await self.bot.dbs.get_active_channel_creator(channel.id)
-            member = channel.guild.get_member(channel_creator_id)
+            member = channel_guild.get_member(channel_creator_id)
             if not member:
+                member = await channel_guild.fetch_member(channel_creator_id)
                 # TODO: Add a real check here for when member is not accurately grabbed from db
-                continue
 
             if hours_passed < 1:
                 channel_edit_str = f"{member.display_name} smelt it recently"
