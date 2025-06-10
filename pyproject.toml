@@ -13,7 +13,7 @@ dependencies = [
 
 
 [tool.uv]
-required-version = "==0.7.5"
+required-version = "==0.7.12"
 
 [tool.ruff]
 line-length = 125
@@ -32,6 +32,8 @@ ignore = [
   "TD",     # flake8-todos: annoying
   "TID252", # flake8-tidy-imports(relative-imports): general disagree
   "F821",   # removed, duplicate as pyright
+  "ARG002", # removed, duplicate as pyright
+  "EXE002", # removed, not even sure tf dis do
 ]
 
 [tool.ruff.lint.isort]
