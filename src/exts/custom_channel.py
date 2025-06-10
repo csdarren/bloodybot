@@ -3,20 +3,18 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from discord import Interaction, Member, VoiceState
+    from discord import Member, VoiceState
 
     from bot import BloodyBot
 from datetime import UTC, datetime
 
-from discord import TextChannel, VoiceChannel, app_commands
+from discord import VoiceChannel
 from discord.ext import commands, tasks
 
 from typedefs import CustomChannel, CustomChannelParticipant
 
-TEST_GUILD_ID = 1373809621373943811
-REAL_GUILD_ID = 1114553445035298938
 
-
+# TODO: Clean this up/update to use new db system
 async def get_active_channels_obj(bot: BloodyBot) -> list[VoiceChannel] | None:
     channels: list[VoiceChannel] = []
     active_channels = await bot.dbs.get_active_channels()
@@ -35,8 +33,6 @@ class CustomChannelCog(commands.Cog):
     def __init__(self, bot: BloodyBot):
         self.bot = bot
         self.update_channel_names.start()
-        self.test_guild = self.bot.get_guild(TEST_GUILD_ID)
-        self.real_guild = self.bot.get_guild(REAL_GUILD_ID)
 
 
     @commands.Cog.listener()
@@ -46,6 +42,7 @@ class CustomChannelCog(commands.Cog):
 
 
         # get list of channel id's that are active, convert to channel objects and iterate through them
+        # TODO: Clean up/update to use new db system
         active_channels = await self.bot.dbs.get_active_channels()
         for channel_id in active_channels:
             if after.channel and after.channel.id == channel_id:
@@ -125,29 +122,30 @@ class CustomChannelCog(commands.Cog):
             if channel.name != channel_edit_str:
                 await channel.edit(name=channel_edit_str)
 
-    @app_commands.command()
-    async def retrieve_channel_details(self, i: Interaction, date: str) -> None:
-        date += "+0000" # Add timezone info for UTC
-        datetime_obj = datetime.strptime(date, "%m-%d-%Y%z")
-        channel_ids = await self.bot.dbs.get_created_channels_timestamp(datetime_obj)
-        channel_members = []
-        for channel_id in channel_ids:
-            channel_member_ids = await self.bot.dbs.get_created_channels_members(channel_id)
-            if self.real_guild is None:
-                continue
-            for channel_member_id in channel_member_ids:
-                member = self.real_guild.get_member(channel_member_id)
-                if member is None:
-                    continue
-                channel_members.append(member.display_name)
-
-            current_channel = i.channel
-            if isinstance(current_channel, TextChannel):
-                await current_channel.send(f"""
-                channel: {channel_id}
-
-                members: {channel_members}
-                                            """)
+    # TODO: Fix this and make it use new db system
+    # @app_commands.command()
+    # async def retrieve_channel_details(self, i: Interaction, date: str) -> None:
+    #     date += "+0000" # Add timezone info for UTC
+    #     datetime_obj = datetime.strptime(date, "%m-%d-%Y%z")
+    #     channel_ids = await self.bot.dbs.get_created_channels_timestamp(datetime_obj)
+    #     channel_members = []
+    #     for channel_id in channel_ids:
+    #         channel_member_ids = await self.bot.dbs.get_created_channels_members(channel_id)
+    #         if self.real_guild is None:
+    #             continue
+    #         for channel_member_id in channel_member_ids:
+    #             member = self.real_guild.get_member(channel_member_id)
+    #             if member is None:
+    #                 continue
+    #             channel_members.append(member.display_name)
+    #
+    #         current_channel = i.channel
+    #         if isinstance(current_channel, TextChannel):
+    #             await current_channel.send(f"""
+    #             channel: {channel_id}
+    #
+    #             members: {channel_members}
+    #                                         """)
 
 
 async def setup(bot: BloodyBot) -> None:
