@@ -34,6 +34,7 @@ ignore = [
   "F821",   # removed, duplicate as pyright
   "ARG002", # removed, duplicate as pyright
   "EXE002", # removed, not even sure tf dis do
+  "FIX002", # removed, disagree. If its TODO, its TODO der duh der
 ]
 
 [tool.ruff.lint.isort]

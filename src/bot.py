@@ -1,54 +1,46 @@
 import logging
 
 import discord
+from discord import Message
 from discord.ext import commands
 
-from db.service import DbService
+from .db.service import DbService
+
+TEST_SERVER_ID = "1373809621373943811"
+REAL_SERVER_ID = "1114553445035298938"
+
+def setup_logger() -> None:
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+
+    handler = logging.FileHandler(filename="bot.log", encoding="utf-8", mode="w")
+    formatter = logging.Formatter("%(asctime)s:%(name)s:%(levelname)s: %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+async def get_prefix(_: commands.Bot, message: Message) -> str:
+    if message.guild  and message.guild.id == TEST_SERVER_ID:
+        return "@"
+    return "!"
 
 logging.basicConfig(level=logging.DEBUG)
 
-class BloodyBot(commands.Bot ):
+class BloodyBot(commands.Bot):
     def __init__(self, dbs: DbService):
         super().__init__( # this super() function setups up commands.Bot, which was passed into the bot.
-            command_prefix="!",
+            command_prefix=get_prefix,
             intents=discord.Intents.all(),
             tree_cls = discord.app_commands.CommandTree
         )
         self.dbs = dbs
 
+
     async def setup_hook(self) -> None:
-        await self.load_extension("exts.custom_channel")
-        await self.load_extension("exts.utils")
-        await self.load_extension("exts.sync")
-        await self.load_extension("exts.manageservers")
-        await self.load_extension("exts.manageservices")
-
-        print(f"Logged in as {self.user}")
-        print(f"Cog loaded: {self.get_cog("CustomChannelCog")}")
-        print(f"Cog loaded: {self.get_cog("UtilitiesCog")}")
-        print(f"Cog loaded: {self.get_cog("SyncCog")}")
-        print(f"Cog loaded: {self.get_cog("StartServers")}")
-        print(f"Cog loaded: {self.get_cog("SystemServices")}")
-
-
-# @WaffleBot.command()
-# async def weather(ctx):
-# 	await ctx.send(build_weather_report())
-#
-#
-# @WaffleBot.command()
-# async def join(ctx):
-#     for guild in WaffleBot.guilds:
-#         member = ctx.author
-#         if member.voice:
-#             channel = member.voice.channel
-#             voice_channel = await channel.connect()
-#
-#             # Make sure the WaffleBot plays the audio after connecting
-#             audio_source = FFmpegPCMAudio("./audio/fart.mp3")  # Ensure the path is correct
-#             voice_channel.play(audio_source, after=lambda e: print("Audio finished playing!"))
-#
-#             await ctx.send(f"Joined {member.name}'s voice channel and started playing audio.")
-#         else:
-#             await ctx.send(f"{member.name} is not in a voice channel")
-#
+        extensions = ["src.exts.custom_channel",
+                      "src.exts.utils",
+                      "src.exts.sync",
+                      "src.exts.system_services",
+                      "src.exts.manage_servers",
+                      ]
+        for extension in extensions:
+            await self.load_extension(extension)

@@ -1,15 +1,35 @@
 from datetime import UTC, datetime
 
-from discord import TextChannel
+from discord import ButtonStyle, Interaction, TextChannel, ui
 from discord.ext import commands
 
-from bot import BloodyBot
+from ..bot import BloodyBot
 
 GREEN_CHECKMARK = "\U00002705"
+
+class UtilsView(ui.View):
+    def __init__(self, bot: BloodyBot):
+        super().__init__()
+        self.bot = bot
+    @ui.button(label="Reload Custom Channel", style=ButtonStyle.primary)
+    async def reload_cc(self, i: Interaction, _: ui.Button) -> None:
+        ext = "src.exts.custom_channel"
+        await self.bot.reload_extension(ext)
+        await i.response.send_message(f"Reloading: {ext}", ephemeral=True)
+    @ui.button(label="Reload Admin Utils", style=ButtonStyle.primary)
+    async def reload_au(self, i: Interaction, _: ui.Button) -> None:
+        ext = "src.exts.utils"
+        await self.bot.reload_extension(ext)
+        await i.response.send_message(f"Reloading: {ext}", ephemeral=True)
 
 class UtilitiesCog(commands.Cog):
     def __init__(self, bot: BloodyBot):
         self.bot = bot
+
+    @commands.command()
+    async def utilview(self, ctx: commands.Context[BloodyBot]) -> None:
+        view = UtilsView(self.bot)
+        await ctx.send("Admin Util Menu", view=view)
 
     @commands.command()
     async def prune(self, ctx: commands.Context[BloodyBot], amt: int) -> None:

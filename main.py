@@ -1,23 +1,18 @@
 import asyncio
-import os
 
-from dotenv import load_dotenv
+from config import botconf
+from src.bot import BloodyBot
+from src.db.service import create_service
 
-from bot import BloodyBot
-from db.service import create_service
-
-load_dotenv()
-
-TOKEN = os.environ["CORD_TOKEN"]
 
 async def run_bot() -> None:
     async with (
         create_service() as dbs,
         BloodyBot(
-            dbs=dbs
+            dbs=dbs,
         ) as bot,
     ):
-        await bot.start(TOKEN)
+        await bot.start(botconf.TOKEN)
 
 def main() -> None:
     try:

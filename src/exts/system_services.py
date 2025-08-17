@@ -3,7 +3,7 @@ import asyncio
 from discord import Interaction, app_commands
 from discord.ext import commands
 
-from bot import BloodyBot
+from ..bot import BloodyBot
 
 
 class SystemServices(commands.Cog):
